@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        var parts = window.location.pathname.split('/').filter(Boolean);
+        var repoBase = parts.length > 0 ? '/' + parts[0] : '';
+        var routePath = '/' + parts.slice(1).join('/');
+        var target = window.location.origin + repoBase + '/#' + (routePath === '/' ? '/' : routePath) + window.location.search;
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
