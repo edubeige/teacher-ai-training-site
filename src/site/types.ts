@@ -59,6 +59,13 @@ export interface ModuleBlocker {
   answer: string
 }
 
+export interface GuideShot {
+  title: string
+  image: string
+  alt: string
+  caption?: string
+}
+
 export interface ModuleItem {
   title: string
   slug: string
@@ -88,6 +95,7 @@ export interface ModuleItem {
   entryHint?: string
   padletInstruction?: string
   screenshotHint?: string
+  guideShots?: GuideShot[]
 }
 
 export interface CurrentSession {

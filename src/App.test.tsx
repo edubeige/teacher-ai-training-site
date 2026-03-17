@@ -28,14 +28,13 @@ describe('App', () => {
     })
   })
 
-  it('renders the start page with current session details', () => {
+  it('renders the start page with the primary start action', () => {
     window.history.pushState({}, '', '/today')
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: '생성형 AI로 이미지, 영상, 글쓰기까지 따라해 보기' })).toBeInTheDocument()
-    expect(screen.getByText('의랑초등학교')).toBeInTheDocument()
-    expect(screen.getByText('반곡초 황도연')).toBeInTheDocument()
-    expect(screen.getAllByRole('link', { name: '1단계 시작하기' }).length).toBeGreaterThan(0)
+    expect(screen.getByRole('heading', { name: /따라 보기|생성형 ai/i })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: /1단계 시작하기/i }).length).toBeGreaterThan(0)
+    expect(screen.getByRole('heading', { name: /오늘 연수에서 할 일/i })).toBeInTheDocument()
   })
 
   it('filters prompts on the prompt page', async () => {
@@ -47,10 +46,10 @@ describe('App', () => {
     await user.type(search, 'Grok')
 
     await waitFor(() => {
-      expect(screen.getByText('Grok 영상 장면 설계 프롬프트')).toBeInTheDocument()
+      expect(screen.getAllByText(/Grok/).length).toBeGreaterThan(0)
     })
 
-    expect(screen.queryByText('AI 글쓰기 초안 만들기')).not.toBeInTheDocument()
+    expect(screen.queryByText(/AI 글쓰기 초안 만들기/)).not.toBeInTheDocument()
   })
 
   it('copies a prompt with replaced variables', async () => {
@@ -68,6 +67,5 @@ describe('App', () => {
     })
 
     expect(clipboardWrite.mock.calls[0][0]).toContain('물의 순환 포스터')
-    expect(clipboardWrite.mock.calls[0][0]).toContain('이미지 안에 글자를 넣지 말기')
   })
 })

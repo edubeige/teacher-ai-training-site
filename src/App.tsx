@@ -70,7 +70,7 @@ function App() {
     content = <PromptsPage onNavigate={handleNavigate} />
   } else if (route.kind === 'prompt') {
     const prompt = promptMap.get(route.slug)
-    content = prompt ? <PromptDetailPage prompt={prompt} onNavigate={handleNavigate} /> : <NotFoundPage onNavigate={handleNavigate} />
+    content = prompt ? <PromptDetailPage prompt={prompt} onNavigate={handleNavigate} /> : <NotFoundPage />
   } else if (route.kind === 'examples') {
     content = <ExamplesPage onNavigate={handleNavigate} />
   } else if (route.kind === 'resources') {
@@ -79,9 +79,9 @@ function App() {
     content = <GuidePage onNavigate={handleNavigate} />
   } else if (route.kind === 'module') {
     const module = moduleMap.get(route.slug)
-    content = module ? <ModulePage module={module} onNavigate={handleNavigate} /> : <NotFoundPage onNavigate={handleNavigate} />
+    content = module ? <ModulePage module={module} onNavigate={handleNavigate} /> : <NotFoundPage />
   } else {
-    content = <NotFoundPage onNavigate={handleNavigate} />
+    content = <NotFoundPage />
   }
 
   return (
