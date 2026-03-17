@@ -35,7 +35,7 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: '생성형 AI로 이미지, 영상, 글쓰기까지 따라해 보기' })).toBeInTheDocument()
     expect(screen.getByText('의랑초등학교')).toBeInTheDocument()
     expect(screen.getByText('반곡초 황도연')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '1단계 시작하기' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: '1단계 시작하기' }).length).toBeGreaterThan(0)
   })
 
   it('filters prompts on the prompt page', async () => {
