@@ -25,6 +25,9 @@ export interface PromptItem {
   difficulty?: '입문' | '기초' | '응용'
   useCase?: string
   outputFormat?: string
+  clickPath?: string
+  afterPasteHint?: string
+  fixTip?: string
 }
 
 export interface ExampleItem {
@@ -79,6 +82,12 @@ export interface ModuleItem {
   fallbackAction?: string
   primaryToolUrl?: string
   waitNote?: string
+  stepNumber?: number
+  ctaLabel?: string
+  toolInstruction?: string
+  entryHint?: string
+  padletInstruction?: string
+  screenshotHint?: string
 }
 
 export interface CurrentSession {

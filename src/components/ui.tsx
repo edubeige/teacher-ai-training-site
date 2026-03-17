@@ -1,6 +1,6 @@
-import { useState, type ReactNode } from 'react'
-import { navigationItems, buildAssetHref, buildInternalHref, isCurrentPath, isExternalHref, isInternalRoute } from '../lib/routing'
-import { currentSession } from '../site/content'
+import { useMemo, useState, type ReactNode } from 'react'
+import { buildAssetHref, buildInternalHref, isCurrentPath, isExternalHref, isInternalRoute } from '../lib/routing'
+import { courseModules, currentSession } from '../site/content'
 import type { ExampleItem, ModuleItem, PromptItem, ResourceItem } from '../site/types'
 
 export function formatKoreanDate(value: string): string {
@@ -42,15 +42,6 @@ async function copyToClipboard(text: string): Promise<void> {
   }
 }
 
-function navigateOrOpen(href: string, onNavigate: (href: string) => void) {
-  if (isInternalRoute(href)) {
-    onNavigate(href)
-    return
-  }
-
-  window.open(href, '_blank', 'noreferrer')
-}
-
 export function AppShell({
   pathname,
   onNavigate,
@@ -60,19 +51,38 @@ export function AppShell({
   onNavigate: (href: string) => void
   children: ReactNode
 }) {
+  const stepItems = useMemo(
+    () =>
+      courseModules.map((module) => ({
+        href: `/modules/${module.slug}`,
+        label: `${module.stepNumber}. ${module.title}`,
+      })),
+    [],
+  )
+
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <button type="button" className="brand-lockup" onClick={() => onNavigate('/')} aria-label="홈으로 이동">
+        <button type="button" className="brand-lockup" onClick={() => onNavigate('/today')} aria-label="시작하기로 이동">
           <span className="brand-mark">AI</span>
           <span className="brand-copy">
-            <strong>생성형 AI 강의자료 허브</strong>
-            <small>Tomorrow training workflow</small>
+            <strong>생성형 AI 따라하기</strong>
+            <small>teacher training manual</small>
           </span>
         </button>
 
-        <nav className="sidebar-nav" aria-label="주요 메뉴">
-          {navigationItems.map((item) => (
+        <nav className="sidebar-nav" aria-label="실습 단계">
+          <span className="sidebar-label">시작</span>
+          <button
+            type="button"
+            className={`sidebar-link ${pathname === '/' || pathname === '/today' ? 'active' : ''}`}
+            onClick={() => onNavigate('/today')}
+          >
+            시작하기
+          </button>
+
+          <span className="sidebar-label">실습 단계</span>
+          {stepItems.map((item) => (
             <button
               key={item.href}
               type="button"
@@ -82,20 +92,39 @@ export function AppShell({
               {item.label}
             </button>
           ))}
+
+          <span className="sidebar-label">보조 메뉴</span>
+          <button
+            type="button"
+            className={`sidebar-link ${isCurrentPath(pathname, '/prompts') ? 'active' : ''}`}
+            onClick={() => onNavigate('/prompts')}
+          >
+            프롬프트 모음
+          </button>
+          <button
+            type="button"
+            className={`sidebar-link ${pathname === '/resources' || pathname === '/guide' ? 'active' : ''}`}
+            onClick={() => onNavigate('/resources')}
+          >
+            자료/도움
+          </button>
         </nav>
 
         <div className="sidebar-support">
-          <span className="sidebar-label">빠른 이동</span>
+          <span className="sidebar-label">바로 열기</span>
           <a className="sidebar-ghost" href={currentSession.padletUrl} target="_blank" rel="noreferrer">
-            Padlet 열기
+            Padlet
           </a>
-          <button type="button" className="sidebar-ghost" onClick={() => onNavigate('/resources')}>
-            외부 도구와 도움말
-          </button>
+          <a className="sidebar-ghost" href="https://gemini.google.com" target="_blank" rel="noreferrer">
+            Gemini
+          </a>
+          <a className="sidebar-ghost" href="https://grok.com" target="_blank" rel="noreferrer">
+            Grok
+          </a>
         </div>
       </aside>
 
-      <div className="app-content">{children}</div>
+      <main className="content-canvas">{children}</main>
     </div>
   )
 }
@@ -112,7 +141,7 @@ export function PageToolbar({
   actions?: Array<{ label: string; href: string; kind?: 'solid' | 'outline' | 'ghost'; external?: boolean }>
 }) {
   return (
-    <header className="page-toolbar glass-panel">
+    <header className="page-toolbar">
       <div>
         {eyebrow ? <p className="toolbar-eyebrow">{eyebrow}</p> : null}
         <h1>{title}</h1>
@@ -162,6 +191,24 @@ export function ActionButton({
   )
 }
 
+export function StepIndicator({ currentStep }: { currentStep: number }) {
+  return (
+    <nav className="step-indicator" aria-label="실습 단계 진행">
+      {courseModules.map((module) => {
+        const active = module.stepNumber === currentStep
+        const complete = (module.stepNumber ?? 0) < currentStep
+
+        return (
+          <div key={module.slug} className={`step-pill ${active ? 'active' : ''} ${complete ? 'complete' : ''}`.trim()}>
+            <span>{module.stepNumber}</span>
+            <strong>{module.title}</strong>
+          </div>
+        )
+      })}
+    </nav>
+  )
+}
+
 export function SectionTitle({
   title,
   description,
@@ -177,106 +224,75 @@ export function SectionTitle({
   )
 }
 
-export function ActionCard({
+export function IntroCard({
   label,
   title,
-  description,
-  href,
-  onNavigate,
+  items,
   tone = 'default',
-  external = false,
-}: {
-  label: string
-  title: string
-  description: string
-  href: string
-  onNavigate: (href: string) => void
-  tone?: 'default' | 'accent' | 'soft'
-  external?: boolean
-}) {
-  return (
-    <button
-      type="button"
-      className={`action-card ${tone}`}
-      onClick={() => (external || isExternalHref(href) ? navigateOrOpen(href, onNavigate) : onNavigate(href))}
-    >
-      <span>{label}</span>
-      <strong>{title}</strong>
-      <p>{description}</p>
-    </button>
-  )
-}
-
-export function QuickStartCard({ steps }: { steps: string[] }) {
-  return (
-    <section className="glass-panel feature-card">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">5분 퀵스타트</span>
-          <strong>처음 접속했을 때 이 순서만 따라오세요.</strong>
-        </div>
-      </div>
-      <ol className="step-chip-list">
-        {steps.map((step) => (
-          <li key={step}>{step}</li>
-        ))}
-      </ol>
-    </section>
-  )
-}
-
-export function ToolStackCard({
-  title,
-  items,
-}: {
-  title: string
-  items: Array<{ title: string; description: string; url: string }>
-}) {
-  return (
-    <section className="panel">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">도구 열기</span>
-          <strong>{title}</strong>
-        </div>
-      </div>
-      <div className="tool-stack">
-        {items.map((item) => (
-          <a key={item.title} className="list-card" href={item.url} target="_blank" rel="noreferrer">
-            <div>
-              <strong>{item.title}</strong>
-              <p>{item.description}</p>
-            </div>
-            <span>열기</span>
-          </a>
-        ))}
-      </div>
-    </section>
-  )
-}
-
-export function InfoListCard({
-  label,
-  title,
-  items,
 }: {
   label: string
   title: string
   items: string[]
+  tone?: 'default' | 'blue' | 'apricot'
 }) {
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">{label}</span>
-          <strong>{title}</strong>
-        </div>
-      </div>
-      <ul className="info-list">
+    <section className={`manual-card ${tone}`}>
+      <span className="panel-label">{label}</span>
+      <strong>{title}</strong>
+      <ul className="manual-list">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
+    </section>
+  )
+}
+
+export function ToolLinkCard({
+  title,
+  description,
+  url,
+}: {
+  title: string
+  description: string
+  url: string
+}) {
+  return (
+    <a className="tool-link-card" href={url} target="_blank" rel="noreferrer">
+      <div>
+        <strong>{title}</strong>
+        <p>{description}</p>
+      </div>
+      <span>열기</span>
+    </a>
+  )
+}
+
+export function ScheduleBoard({
+  modules,
+  onNavigate,
+}: {
+  modules: ModuleItem[]
+  onNavigate: (href: string) => void
+}) {
+  return (
+    <section className="manual-panel">
+      <div className="panel-heading">
+        <span className="panel-label">실습 순서</span>
+        <strong>위에서 아래로 순서대로 따라가면 됩니다.</strong>
+      </div>
+      <div className="schedule-list">
+        {modules.map((module) => (
+          <button key={module.slug} type="button" className="schedule-item" onClick={() => onNavigate(`/modules/${module.slug}`)}>
+            <div className="schedule-number">{module.stepNumber}</div>
+            <div className="schedule-copy">
+              <strong>{module.title}</strong>
+              <p>{module.summary}</p>
+            </div>
+            <span>{module.estimatedTime}</span>
+          </button>
+        ))}
+      </div>
     </section>
   )
 }
@@ -291,22 +307,20 @@ export function SessionInfoCard({
   instructor: string
 }) {
   const entries = [
-    { label: '학교명', value: schoolName },
+    { label: '학교', value: schoolName },
     { label: '날짜', value: formatKoreanDate(date) },
     { label: '강사', value: instructor },
   ]
 
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">오늘 연수</span>
-          <strong>세션 기본 정보</strong>
-        </div>
+    <section className="manual-panel">
+      <div className="panel-heading">
+        <span className="panel-label">기본 정보</span>
+        <strong>오늘 연수 정보</strong>
       </div>
-      <div className="detail-grid">
+      <div className="info-grid">
         {entries.map((entry) => (
-          <article key={entry.label} className="detail-card">
+          <article key={entry.label} className="info-box">
             <span>{entry.label}</span>
             <strong>{entry.value}</strong>
           </article>
@@ -316,113 +330,67 @@ export function SessionInfoCard({
   )
 }
 
-export function ScheduleBoard({
-  modules,
-  onNavigate,
+export function StepTaskCard({
+  module,
 }: {
-  modules: ModuleItem[]
-  onNavigate: (href: string) => void
+  module: ModuleItem
 }) {
   return (
-    <section className="panel">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">오늘의 순서</span>
-          <strong>순서대로 열면 됩니다.</strong>
-        </div>
+    <section className="manual-panel focus-panel">
+      <div className="panel-heading">
+        <span className="panel-label">지금 할 일</span>
+        <strong>{module.toolInstruction ?? `${module.tool}을 열고 이 단계부터 시작하세요.`}</strong>
       </div>
-      <div className="board-list">
-        {modules.map((module) => (
-          <article key={module.slug} className="board-row">
-            <div className="board-copy">
-              <div className="board-heading">
-                <strong>{module.title}</strong>
-                <span>{module.estimatedTime}</span>
-              </div>
-              <p>{module.expectedOutcome ?? module.summary}</p>
-            </div>
-            <button type="button" className="button outline board-button" onClick={() => onNavigate(`/modules/${module.slug}`)}>
-              열기
-            </button>
-          </article>
-        ))}
+      <div className="focus-meta">
+        <span>{module.stepNumber}단계</span>
+        <span>{module.estimatedTime}</span>
+        <span>{module.difficulty}</span>
       </div>
+      <p>{module.entryHint ?? module.summary}</p>
+      {module.primaryToolUrl ? <ActionButton href={module.primaryToolUrl} kind="solid" external>{module.ctaLabel ?? '지금 열기'}</ActionButton> : null}
     </section>
   )
 }
 
-export function ModuleSummaryCard({
-  module,
-  onNavigate,
+export function HelpStrip({
+  items,
 }: {
-  module: ModuleItem
-  onNavigate: (href: string) => void
+  items: string[]
 }) {
   return (
-    <article className="module-summary-card">
-      <div className="meta-row">
-        <span>{module.tool}</span>
-        <span>{module.difficulty}</span>
-      </div>
-      <button type="button" className="card-title-button" onClick={() => onNavigate(`/modules/${module.slug}`)}>
-        {module.title}
-      </button>
-      <p>{module.summary}</p>
-      <div className="summary-points">
-        <div>
-          <span>끝나면 얻는 것</span>
-          <strong>{module.expectedOutcome ?? module.goal}</strong>
-        </div>
-        <div>
-          <span>빠른 성공 포인트</span>
-          <strong>{module.quickWin ?? module.goal}</strong>
-        </div>
-      </div>
-      <button type="button" className="button outline block-button" onClick={() => onNavigate(`/modules/${module.slug}`)}>
-        모듈 보기
-      </button>
-    </article>
+    <section className="help-strip">
+      {items.map((item) => (
+        <article key={item} className="help-chip">
+          {item}
+        </article>
+      ))}
+    </section>
   )
 }
 
-export function ModuleRail({ module }: { module: ModuleItem }) {
-  const anchors = [
-    { href: '#overview', label: '개요' },
-    { href: '#prepare', label: '준비 체크' },
-    { href: '#steps', label: '실습 순서' },
-    { href: '#prompts', label: '프롬프트' },
-    { href: '#examples', label: '예시 결과' },
-    { href: '#resources', label: '자료 연결' },
-  ]
-
+export function ScreenshotGuideCard({
+  module,
+}: {
+  module: ModuleItem
+}) {
   return (
-    <aside className="module-rail">
-      <section className="glass-panel rail-card">
-        <span className="panel-label">모듈 개요</span>
-        <strong>{module.title}</strong>
-        <p>{module.summary}</p>
-        <div className="rail-stat">
-          <span>난이도</span>
-          <strong>{module.difficulty}</strong>
+    <section className="manual-panel">
+      <div className="panel-heading">
+        <span className="panel-label">어디를 누르나요</span>
+        <strong>{module.entryHint ?? '입력창이나 탭 위치를 먼저 확인하세요.'}</strong>
+      </div>
+      <p>{module.screenshotHint ?? '실제 화면 캡처가 준비되면 이 자리에 바로 교체할 수 있습니다.'}</p>
+      <div className="screenshot-placeholder">
+        <div className="fake-topbar" />
+        <div className="fake-title" />
+        <div className="fake-tabs">
+          <span />
+          <span />
+          <span />
         </div>
-        <div className="rail-stat">
-          <span>예상 시간</span>
-          <strong>{module.estimatedTime}</strong>
-        </div>
-        <div className="rail-stat">
-          <span>빠른 성공 포인트</span>
-          <strong>{module.quickWin ?? module.goal}</strong>
-        </div>
-      </section>
-
-      <nav className="rail-nav" aria-label="모듈 이동">
-        {anchors.map((anchor) => (
-          <a key={anchor.href} href={anchor.href}>
-            {anchor.label}
-          </a>
-        ))}
-      </nav>
-    </aside>
+        <div className="fake-content" />
+      </div>
+    </section>
   )
 }
 
@@ -435,7 +403,7 @@ export function ModuleStepCard({
 }) {
   return (
     <article className="process-card">
-      <div className="process-index">{String(index + 1).padStart(2, '0')}</div>
+      <div className="process-index">{index + 1}</div>
       <div>
         <strong>{step.title}</strong>
         <p>{step.description}</p>
@@ -514,10 +482,10 @@ export function CopyButton({
         try {
           await copyToClipboard(text)
           setStatus('done')
-          window.setTimeout(() => setStatus('idle'), 1600)
+          window.setTimeout(() => setStatus('idle'), 1500)
         } catch {
           setStatus('error')
-          window.setTimeout(() => setStatus('idle'), 1600)
+          window.setTimeout(() => setStatus('idle'), 1500)
         }
       }}
     >
@@ -528,14 +496,83 @@ export function CopyButton({
   )
 }
 
-export function PromptCard({
+export function PromptRecipeCard({
   prompt,
   onNavigate,
-  compact = false,
 }: {
   prompt: PromptItem
   onNavigate: (href: string) => void
-  compact?: boolean
+}) {
+  const renderedPrompt = replacePromptVariables(
+    prompt,
+    Object.fromEntries(prompt.variables.map((variable) => [variable.key, variable.defaultValue])),
+  )
+
+  return (
+    <article className="prompt-recipe-card">
+      <div className="recipe-top">
+        <div>
+          <span className="panel-label">{prompt.relatedTool}</span>
+          <strong>{prompt.title}</strong>
+        </div>
+        <CopyButton text={renderedPrompt} />
+      </div>
+      <div className="recipe-grid">
+        <div>
+          <span>언제 쓰나요</span>
+          <p>{prompt.exampleUse}</p>
+        </div>
+        <div>
+          <span>어디에 붙여 넣나요</span>
+          <p>{prompt.whereToUse ?? `${prompt.relatedTool} 입력창에 붙여 넣습니다.`}</p>
+        </div>
+      </div>
+      <button type="button" className="button ghost" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
+        상세 보기
+      </button>
+    </article>
+  )
+}
+
+export function PromptListCard({
+  prompt,
+  onNavigate,
+}: {
+  prompt: PromptItem
+  onNavigate: (href: string) => void
+}) {
+  const renderedPrompt = replacePromptVariables(
+    prompt,
+    Object.fromEntries(prompt.variables.map((variable) => [variable.key, variable.defaultValue])),
+  )
+
+  return (
+    <article className="prompt-list-card">
+      <div>
+        <div className="meta-row">
+          <span>{prompt.relatedTool}</span>
+          <span>{prompt.difficulty ?? '기초'}</span>
+        </div>
+        <strong>{prompt.title}</strong>
+        <p>{prompt.exampleUse}</p>
+        <p>{prompt.whereToUse ?? `${prompt.relatedTool} 입력창에 붙여 넣습니다.`}</p>
+      </div>
+      <div className="prompt-list-actions">
+        <CopyButton text={renderedPrompt} />
+        <button type="button" className="button ghost" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
+          자세히 보기
+        </button>
+      </div>
+    </article>
+  )
+}
+
+export function PromptCard({
+  prompt,
+  onNavigate,
+}: {
+  prompt: PromptItem
+  onNavigate: (href: string) => void
 }) {
   const [values, setValues] = useState<Record<string, string>>(
     Object.fromEntries(prompt.variables.map((variable) => [variable.key, variable.defaultValue])),
@@ -543,30 +580,30 @@ export function PromptCard({
   const renderedPrompt = replacePromptVariables(prompt, values)
 
   return (
-    <article className={`prompt-card ${compact ? 'compact' : ''}`}>
+    <article className="prompt-detail-card">
       <div className="meta-row">
         <span>{prompt.relatedTool}</span>
         <span>{prompt.difficulty ?? '기초'}</span>
       </div>
-      <button type="button" className="card-title-button" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
-        {prompt.title}
-      </button>
-      <div className="prompt-intel">
-        <div>
-          <span>언제 쓰나요</span>
-          <strong>{prompt.exampleUse}</strong>
-        </div>
-        <div>
-          <span>어디에 붙여 넣나요</span>
-          <strong>{prompt.whereToUse ?? `${prompt.relatedTool} 입력창에 붙여 넣습니다.`}</strong>
-        </div>
-        <div>
-          <span>예상 결과</span>
-          <strong>{prompt.expectedOutput ?? '바로 수정 가능한 초안을 받습니다.'}</strong>
-        </div>
+      <h2>{prompt.title}</h2>
+      <p>{prompt.exampleUse}</p>
+
+      <div className="detail-grid">
+        <article className="info-box">
+          <span>들어가는 곳</span>
+          <strong>{prompt.clickPath ?? prompt.whereToUse ?? `${prompt.relatedTool} 입력창`}</strong>
+        </article>
+        <article className="info-box">
+          <span>붙여 넣은 뒤 확인</span>
+          <strong>{prompt.afterPasteHint ?? '결과가 원하는 형식으로 나오는지 확인합니다.'}</strong>
+        </article>
+        <article className="info-box">
+          <span>안 맞으면 수정</span>
+          <strong>{prompt.fixTip ?? '조건을 더 짧고 구체적으로 다시 적습니다.'}</strong>
+        </article>
       </div>
 
-      {!compact && prompt.variables.length > 0 ? (
+      {prompt.variables.length > 0 ? (
         <div className="variable-grid">
           {prompt.variables.map((variable) => (
             <label key={variable.key}>
@@ -587,62 +624,11 @@ export function PromptCard({
         </div>
       ) : null}
 
-      <div className="tag-row">
-        {prompt.tags.map((tag) => (
-          <span key={tag} className="tag">
-            #{tag}
-          </span>
-        ))}
-      </div>
-
-      <pre>{compact ? `${renderedPrompt.slice(0, 220)}${renderedPrompt.length > 220 ? '...' : ''}` : renderedPrompt}</pre>
-      <div className="prompt-actions">
+      <pre>{renderedPrompt}</pre>
+      <div className="toolbar-actions">
         <CopyButton text={renderedPrompt} />
-        <button type="button" className="button outline" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
-          상세 보기
-        </button>
-      </div>
-    </article>
-  )
-}
-
-export function PromptListCard({
-  prompt,
-  onNavigate,
-}: {
-  prompt: PromptItem
-  onNavigate: (href: string) => void
-}) {
-  return (
-    <article className="prompt-list-card">
-      <div className="meta-row">
-        <span>{prompt.relatedTool}</span>
-        <span>{prompt.difficulty ?? '기초'}</span>
-      </div>
-      <button type="button" className="card-title-button" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
-        {prompt.title}
-      </button>
-      <p>{prompt.useCase ?? prompt.exampleUse}</p>
-      <div className="prompt-rows">
-        <div>
-          <span>어디에 붙여 넣나요</span>
-          <strong>{prompt.whereToUse ?? `${prompt.relatedTool} 입력창에 붙여 넣습니다.`}</strong>
-        </div>
-        <div>
-          <span>예상 결과</span>
-          <strong>{prompt.expectedOutput ?? '바로 수정 가능한 초안을 받습니다.'}</strong>
-        </div>
-      </div>
-      <div className="tag-row">
-        {prompt.tags.map((tag) => (
-          <span key={tag} className="tag">
-            #{tag}
-          </span>
-        ))}
-      </div>
-      <div className="prompt-list-actions">
-        <button type="button" className="button ghost" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
-          자세히 보기
+        <button type="button" className="button outline" onClick={() => onNavigate('/prompts')}>
+          프롬프트 목록
         </button>
       </div>
     </article>
@@ -657,7 +643,7 @@ export function ExampleGallery({
   onNavigate: (href: string) => void
 }) {
   return (
-    <div className="card-grid dual">
+    <div className="example-grid">
       {items.map((item) => (
         <article key={item.slug} className="example-card">
           <img src={buildAssetHref(item.image)} alt="" />
@@ -732,15 +718,11 @@ export function SupportCard({
   items: string[]
 }) {
   return (
-    <section className="panel support-card">
-      <div className="panel-header">
-        <div>
-          <span className="panel-label">지원 안내</span>
-          <strong>{title}</strong>
-        </div>
-      </div>
+    <section className="manual-card apricot">
+      <span className="panel-label">도움말</span>
+      <strong>{title}</strong>
       <p>{description}</p>
-      <ul className="support-list">
+      <ul className="manual-list">
         {items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -752,15 +734,46 @@ export function SupportCard({
 export function PadletCard({
   text,
   url,
+  description,
 }: {
   text: string
   url: string
+  description?: string
 }) {
   return (
     <a className="padlet-card" href={url} target="_blank" rel="noreferrer">
       <span className="panel-label">Padlet</span>
       <strong>{text}</strong>
-      <p>이 사이트에는 업로드 기능이 없으므로 결과 공유는 Padlet에서만 진행합니다.</p>
+      <p>{description ?? '결과 공유는 Padlet에서만 진행합니다.'}</p>
     </a>
+  )
+}
+
+export function StepFooterNav({
+  previousHref,
+  previousLabel,
+  nextHref,
+  nextLabel,
+}: {
+  previousHref?: string
+  previousLabel?: string
+  nextHref?: string
+  nextLabel?: string
+}) {
+  return (
+    <div className="step-footer-nav">
+      {previousHref ? (
+        <a className="button outline footer-button" href={buildInternalHref(previousHref)}>
+          이전: {previousLabel}
+        </a>
+      ) : (
+        <span />
+      )}
+      {nextHref ? (
+        <a className="button solid footer-button" href={buildInternalHref(nextHref)}>
+          다음: {nextLabel}
+        </a>
+      ) : null}
+    </div>
   )
 }

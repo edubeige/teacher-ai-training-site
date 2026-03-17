@@ -28,16 +28,17 @@ describe('App', () => {
     })
   })
 
-  it('renders the today page with current session details', () => {
+  it('renders the start page with current session details', () => {
     window.history.pushState({}, '', '/today')
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: '생성형 AI로 이미지, 영상, 글쓰기까지 빠르게 만들기' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '생성형 AI로 이미지, 영상, 글쓰기까지 따라해 보기' })).toBeInTheDocument()
     expect(screen.getByText('의랑초등학교')).toBeInTheDocument()
     expect(screen.getByText('반곡초 황도연')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '1단계 시작하기' })).toBeInTheDocument()
   })
 
-  it('filters prompts on the prompt hub', async () => {
+  it('filters prompts on the prompt page', async () => {
     const user = userEvent.setup()
     window.history.pushState({}, '', '/prompts')
     render(<App />)
@@ -46,10 +47,10 @@ describe('App', () => {
     await user.type(search, 'Grok')
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Grok 영상 생성용 장면 설계 프롬프트' })).toBeInTheDocument()
+      expect(screen.getByText('Grok 영상 장면 설계 프롬프트')).toBeInTheDocument()
     })
 
-    expect(screen.queryByRole('button', { name: 'AI 글쓰기 초안 만들기' })).not.toBeInTheDocument()
+    expect(screen.queryByText('AI 글쓰기 초안 만들기')).not.toBeInTheDocument()
   })
 
   it('copies a prompt with replaced variables', async () => {
@@ -67,6 +68,6 @@ describe('App', () => {
     })
 
     expect(clipboardWrite.mock.calls[0][0]).toContain('물의 순환 포스터')
-    expect(clipboardWrite.mock.calls[0][0]).toContain('텍스트를 넣지 말아야')
+    expect(clipboardWrite.mock.calls[0][0]).toContain('이미지 안에 글자를 넣지 말기')
   })
 })
