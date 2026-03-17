@@ -32,7 +32,7 @@ describe('App', () => {
     window.history.pushState({}, '', '/today')
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: '생성형 AI를 활용한 칼퇴하기' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '생성형 AI로 이미지, 영상, 글쓰기까지 빠르게 만들기' })).toBeInTheDocument()
     expect(screen.getByText('의랑초등학교')).toBeInTheDocument()
     expect(screen.getByText('반곡초 황도연')).toBeInTheDocument()
   })
@@ -43,30 +43,30 @@ describe('App', () => {
     render(<App />)
 
     const search = screen.getByRole('searchbox', { name: '프롬프트 검색' })
-    await user.type(search, 'Canva 앱')
+    await user.type(search, 'Grok')
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Canva 앱 PRD 메이커' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Grok 영상 생성용 장면 설계 프롬프트' })).toBeInTheDocument()
     })
 
-    expect(screen.queryByRole('button', { name: '수업 설계 가속 프롬프트' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'AI 글쓰기 초안 만들기' })).not.toBeInTheDocument()
   })
 
   it('copies a prompt with replaced variables', async () => {
     const user = userEvent.setup()
-    window.history.pushState({}, '', '/prompts/lesson-design-accelerator')
+    window.history.pushState({}, '', '/prompts/gemini-image-prompt')
     render(<App />)
 
-    const gradeInput = screen.getByLabelText('학년')
-    await user.clear(gradeInput)
-    await user.type(gradeInput, '6학년')
+    const topicInput = screen.getByLabelText('주제')
+    await user.clear(topicInput)
+    await user.type(topicInput, '물의 순환 포스터')
     await user.click(screen.getByRole('button', { name: '프롬프트 복사' }))
 
     await waitFor(() => {
       expect(clipboardWrite).toHaveBeenCalled()
     })
 
-    expect(clipboardWrite.mock.calls[0][0]).toContain('6학년')
-    expect(clipboardWrite.mock.calls[0][0]).toContain('설명하는 글 쓰기')
+    expect(clipboardWrite.mock.calls[0][0]).toContain('물의 순환 포스터')
+    expect(clipboardWrite.mock.calls[0][0]).toContain('텍스트를 넣지 말아야')
   })
 })

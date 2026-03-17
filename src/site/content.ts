@@ -3,269 +3,245 @@ import type { CurrentSession, ExampleItem, ModuleItem, PromptItem, ResourceItem 
 export const toolLinkMap = {
   gemini: {
     title: 'Gemini',
-    description: '질문, 문장 다듬기, 초안 생성 실습에 사용합니다.',
+    description: '이미지 생성, 글쓰기, 프롬프트 실습에 가장 먼저 엽니다.',
     url: 'https://gemini.google.com',
   },
-  aiStudio: {
-    title: 'Google AI Studio',
-    description: '긴 프롬프트와 구조화된 출력 실험에 적합합니다.',
-    url: 'https://aistudio.google.com',
+  grok: {
+    title: 'Grok',
+    description: '짧은 영상 생성 흐름을 실습할 때 엽니다.',
+    url: 'https://grok.com',
   },
-  notebooklm: {
-    title: 'NotebookLM',
-    description: '자료 요약, 질의응답, 학습지 재구성에 활용합니다.',
-    url: 'https://notebooklm.google.com',
-  },
-  canva: {
-    title: 'Canva',
-    description: '이미지와 슬라이드, 카드형 결과물 제작에 사용합니다.',
-    url: 'https://www.canva.com',
+  padlet: {
+    title: 'Padlet',
+    description: '현장 결과물 공유와 체크인만 여기서 진행합니다.',
+    url: 'https://padlet.com',
   },
 } as const
 
 export const currentSession: CurrentSession = {
-  trainingTitle: '생성형 AI를 활용한 칼퇴하기',
+  trainingTitle: '생성형 AI로 이미지, 영상, 글쓰기까지 빠르게 만들기',
   schoolName: '의랑초등학교',
   date: '2026-03-18',
   instructor: '반곡초 황도연',
   notices: [
-    '이 사이트는 강의자료와 복사용 프롬프트 제공용입니다.',
-    '참가자 업로드와 현장 결과물 공유는 Padlet에서만 진행합니다.',
-    '계정 준비가 안 된 경우에는 가이드 페이지를 먼저 확인해 주세요.',
+    '이 사이트는 설명과 프롬프트 복사 전용입니다.',
+    '결과 공유와 업로드는 Padlet에서만 진행합니다.',
+    'Grok 영상 생성은 대기 시간이 있어 글쓰기 실습과 번갈아 진행합니다.',
   ],
   padletUrl: 'https://padlet.com',
-  featuredModules: ['orientation-and-tool-setup', 'prompt-design-studio', 'image-and-slide-lab'],
+  featuredModules: [
+    'orientation-and-tool-setup',
+    'prompt-basics',
+    'gemini-image-lab',
+    'grok-video-lab',
+    'ai-writing-lab',
+  ],
   quickStartSteps: [
-    '구글 계정 로그인 상태를 먼저 확인합니다.',
-    'Gemini, AI Studio, Canva 중 오늘 사용할 도구를 새 탭으로 엽니다.',
-    '첫 프롬프트를 복사해 붙여 넣고 결과를 한 번 확인합니다.',
-    '공유가 필요하면 Padlet 탭을 열어 둡니다.',
+    'Gemini와 Grok 로그인 상태를 먼저 확인하세요.',
+    '오늘 핵심 흐름을 읽고 첫 모듈부터 순서대로 여세요.',
+    '프롬프트는 복사 후 바로 도구 입력창에 붙여 넣으세요.',
   ],
-  mustOpenTools: ['Gemini', 'Google AI Studio', 'Canva', 'Padlet'],
+  mustOpenTools: ['Gemini', 'Grok', 'Padlet'],
   supportNotes: [
-    '로그인이 막히면 가이드 페이지에서 빠른 해결 카드를 먼저 확인하세요.',
-    '복사 버튼이 되지 않으면 프롬프트 본문을 길게 눌러 수동 복사를 시도하세요.',
-    '결과가 길거나 어색하면 학년, 과목, 형식을 더 구체적으로 넣어 주세요.',
+    '복사가 안 되면 본문을 직접 선택해 붙여 넣어도 됩니다.',
+    '결과가 길면 항목 수를 줄여 달라고 다시 요청하세요.',
+    '영상 생성이 오래 걸리면 글쓰기 모듈을 먼저 진행하세요.',
   ],
+  agendaTitle: '오늘 핵심 흐름',
+  primaryAction: '첫 모듈 시작',
+  secondaryAction: '프롬프트 허브 열기',
 }
 
 export const prompts: PromptItem[] = [
   {
-    title: '수업 설계 가속 프롬프트',
-    slug: 'lesson-design-accelerator',
-    category: '수업 설계',
-    tags: ['차시안', '수업활동', '평가'],
-    body: `너는 {{grade}} {{subject}} 수업 설계 코치야.
-주제는 "{{topic}}"이고 수업 시간은 {{duration}}이야.
-다음 형식으로 제안해 줘.
-1. 수업 목표 3개
-2. 도입-전개-정리 활동안
-3. 학생 참여를 높이는 질문 5개
-4. 형성평가 문항 3개
-5. 교사용 운영 팁
-톤은 {{tone}}으로 유지해 줘.`,
+    title: '막연한 요청을 실습용 프롬프트로 바꾸기',
+    slug: 'prompt-refiner-basic',
+    category: '프롬프트 개선',
+    tags: ['기초', '프롬프트', '업그레이드'],
+    body: `다음 요청을 초등학교 교사 연수 실습용 프롬프트로 바꿔 줘.
+요청: "{{request}}"
+
+조건:
+- 역할을 먼저 적기
+- 목표를 한 문장으로 적기
+- 출력 형식을 번호 목록으로 고정하기
+- 초보 교사도 바로 복사해 쓸 수 있게 짧게 쓰기
+- 마지막에 "이 프롬프트가 좋아진 이유"를 3줄로 설명하기`,
     variables: [
+      { key: 'request', label: '원래 요청', placeholder: '예: 수업 아이디어 줘', defaultValue: '수업 아이디어 줘' },
+    ],
+    exampleUse: '막연한 질문을 바로 실습 가능한 프롬프트로 바꾸고 싶을 때 씁니다.',
+    relatedTool: 'Gemini',
+    whereToUse: 'Gemini 입력창에 바로 붙여 넣습니다.',
+    expectedOutput: '역할, 목표, 출력 형식이 분명한 프롬프트 초안과 수정 이유를 받습니다.',
+    difficulty: '입문',
+    useCase: '프롬프트 설계 시작',
+    outputFormat: '번호 목록 + 짧은 설명',
+  },
+  {
+    title: 'Gemini 이미지 생성 프롬프트',
+    slug: 'gemini-image-prompt',
+    category: 'Gemini 이미지 생성',
+    tags: ['Gemini', '이미지', '포스터'],
+    body: `너는 초등학교 수업용 이미지를 설계하는 도우미야.
+주제는 "{{topic}}"이고 대상은 {{grade}} 학생이야.
+
+다음 조건을 포함한 이미지 생성 프롬프트를 작성해 줘.
+1. 장면 설명
+2. 구도와 시점
+3. 색감과 분위기
+4. 텍스트를 넣지 말아야 한다는 조건
+5. 교실에서 활용하는 방법 2가지
+
+스타일은 "{{tone}}"으로 맞춰 줘.`,
+    variables: [
+      { key: 'topic', label: '주제', placeholder: '예: 봄 식물의 한살이', defaultValue: '봄 식물의 한살이' },
       { key: 'grade', label: '학년', placeholder: '예: 3학년', defaultValue: '3학년' },
-      { key: 'subject', label: '과목', placeholder: '예: 국어', defaultValue: '국어' },
-      { key: 'topic', label: '주제', placeholder: '예: 설명하는 글 쓰기', defaultValue: '설명하는 글 쓰기' },
-      { key: 'duration', label: '수업 시간', placeholder: '예: 40분', defaultValue: '40분' },
-      { key: 'tone', label: '문체', placeholder: '예: 친절하고 간결하게', defaultValue: '친절하고 간결하게' },
+      { key: 'tone', label: '분위기', placeholder: '예: 밝고 선명하게', defaultValue: '밝고 선명하게' },
     ],
-    exampleUse: '차시안 초안을 빠르게 만들고 수정 포인트를 잡을 때 사용합니다.',
+    exampleUse: 'Gemini에서 수업용 시각 자료 이미지를 만들기 전에 프롬프트를 정리할 때 씁니다.',
     relatedTool: 'Gemini',
-    whereToUse: 'Gemini나 AI Studio 입력창에 바로 붙여 넣습니다.',
-    expectedOutput: '수업 목표, 활동안, 질문, 평가, 운영 팁이 한 번에 정리된 초안을 받습니다.',
+    whereToUse: 'Gemini 이미지 생성 입력창에 붙여 넣습니다.',
+    expectedOutput: '장면, 구도, 분위기, 금지 요소가 정리된 이미지 프롬프트를 받습니다.',
     difficulty: '기초',
+    useCase: '수업용 이미지 제작',
+    outputFormat: '이미지 생성 프롬프트',
   },
   {
-    title: '프롬프트 업그레이드 코치',
-    slug: 'prompt-refiner',
-    category: '프롬프트 설계',
-    tags: ['메타프롬프트', '리라이팅', '정교화'],
-    body: `다음 사용자 요청을 더 나은 프롬프트로 바꿔 줘.
-요청: "{{topic}}"
+    title: 'Grok 영상 생성용 장면 설계 프롬프트',
+    slug: 'grok-video-scene-builder',
+    category: 'Grok 영상 생성',
+    tags: ['Grok', '영상', '스토리보드'],
+    body: `다음 주제로 8초 안팎의 짧은 영상을 만들고 싶어.
+주제: "{{topic}}"
+
+아래 형식으로 작성해 줘.
+1. 영상 한 줄 콘셉트
+2. 시작 장면
+3. 중간 움직임
+4. 마지막 장면
+5. 카메라 느낌
+6. 피해야 할 요소
 
 조건:
-- 초등 교사 연수 상황에 맞게 재작성
-- 역할, 목표, 출력 형식, 제약 조건을 분명히 포함
-- 초보 교사도 바로 복사해 쓸 수 있도록 작성
-- 마지막에 "왜 이렇게 바꿨는지" 3줄 설명 추가`,
+- 장면은 단순하고 선명하게
+- 인물 수는 너무 많지 않게
+- 교실에서 보여 주기 좋은 분위기로 작성`,
     variables: [
-      { key: 'topic', label: '원래 요청', placeholder: '예: 발표 수업 아이디어 알려줘', defaultValue: '발표 수업 아이디어 알려줘' },
+      { key: 'topic', label: '영상 주제', placeholder: '예: 우주 탐험 출발 장면', defaultValue: '우주 탐험 출발 장면' },
     ],
-    exampleUse: '막연한 질문을 실습용 프롬프트 카드로 바꾸는 데 적합합니다.',
-    relatedTool: 'AI Studio',
-    whereToUse: 'AI Studio에 붙여 넣고 기존 질문을 더 좋은 프롬프트로 다듬을 때 씁니다.',
-    expectedOutput: '역할, 목표, 형식, 제약이 포함된 더 정교한 프롬프트와 개선 이유를 받습니다.',
-    difficulty: '기초',
-  },
-  {
-    title: '이미지 생성 브리프',
-    slug: 'image-brief-for-class',
-    category: '이미지 생성',
-    tags: ['이미지', 'Canva', '시각자료'],
-    body: `{{subject}} 수업에서 사용할 이미지를 만들고 싶어.
-주제는 "{{topic}}"이고 학생 수준은 {{grade}}이야.
-
-다음 항목을 포함한 이미지 생성 프롬프트를 작성해 줘.
-- 장면 설명
-- 화면 구도
-- 색감과 분위기
-- 피해야 할 요소
-- 교실에서 활용하는 방법 2가지
-
-스타일은 {{tone}}으로 맞춰 줘.`,
-    variables: [
-      { key: 'subject', label: '과목', placeholder: '예: 사회', defaultValue: '사회' },
-      { key: 'topic', label: '주제', placeholder: '예: 지속 가능한 도시', defaultValue: '지속 가능한 도시' },
-      { key: 'grade', label: '학년', placeholder: '예: 5학년', defaultValue: '5학년' },
-      { key: 'tone', label: '분위기', placeholder: '예: 따뜻하고 선명하게', defaultValue: '따뜻하고 선명하게' },
-    ],
-    exampleUse: 'Canva 또는 Gemini에 붙여 넣을 시각자료용 브리프를 만들 때 유용합니다.',
-    relatedTool: 'Canva',
-    whereToUse: 'Canva 또는 Gemini의 이미지 생성 입력창에 붙여 넣습니다.',
-    expectedOutput: '장면 설명, 구도, 분위기, 금지 요소, 활용 방법이 포함된 시각화 브리프를 받습니다.',
-    difficulty: '입문',
-  },
-  {
-    title: 'NotebookLM 학습지 변환 프롬프트',
-    slug: 'notebooklm-study-guide',
-    category: '자료 재구성',
-    tags: ['요약', '학습지', 'NotebookLM'],
-    body: `첨부한 자료를 {{grade}} 학생용 학습지로 바꿔 줘.
-과목은 {{subject}}, 목표는 "{{topic}}"이야.
-
-출력 형식:
-1. 핵심 개념 4개
-2. 학생용 쉬운 설명
-3. 확인 질문 5개
-4. 교사용 확장 질문 3개
-5. 수업 마무리 문장
-
-문장은 {{tone}}으로 써 줘.`,
-    variables: [
-      { key: 'grade', label: '학년', placeholder: '예: 4학년', defaultValue: '4학년' },
-      { key: 'subject', label: '과목', placeholder: '예: 과학', defaultValue: '과학' },
-      { key: 'topic', label: '학습 목표', placeholder: '예: 물의 순환 이해', defaultValue: '물의 순환 이해' },
-      { key: 'tone', label: '문체', placeholder: '예: 쉬운 말 중심으로', defaultValue: '쉬운 말 중심으로' },
-    ],
-    exampleUse: '긴 읽기 자료를 학생 활동지나 교사용 요약본으로 바꿀 때 씁니다.',
-    relatedTool: 'NotebookLM',
-    whereToUse: 'NotebookLM 대화창에 자료를 넣은 뒤 후속 프롬프트로 사용합니다.',
-    expectedOutput: '핵심 개념, 쉬운 설명, 확인 질문, 확장 질문까지 포함된 학습지 초안을 받습니다.',
-    difficulty: '기초',
-  },
-  {
-    title: 'Canva 앱 PRD 메이커',
-    slug: 'canva-app-prd-maker',
-    category: '기획',
-    tags: ['PRD', 'Canva', '바이브코딩'],
-    body: `너는 교사용 Canva 앱 기획 파트너야.
-앱 이름은 "{{topic}}"이고 대상은 {{grade}} {{subject}} 수업이야.
-
-아래 형식의 Markdown PRD를 작성해 줘.
-1. Purpose & Target
-2. Key Features
-3. Design Requirements
-4. Data & Storage
-5. User Scenario
-
-조건:
-- Canva 안에서 모든 데이터 입력이 이루어져야 함
-- 저장 데이터는 텍스트, 숫자, 날짜, 불린만 사용
-- 교사가 바로 Gemini에 넣을 수 있도록 간결하고 명확하게 작성
-- 톤은 {{tone}}으로 유지`,
-    variables: [
-      { key: 'topic', label: '앱 주제', placeholder: '예: 모둠 추첨 도구', defaultValue: '모둠 추첨 도구' },
-      { key: 'grade', label: '학년', placeholder: '예: 6학년', defaultValue: '6학년' },
-      { key: 'subject', label: '과목', placeholder: '예: 창체', defaultValue: '창체' },
-      { key: 'tone', label: '문체', placeholder: '예: 실무형', defaultValue: '실무형' },
-    ],
-    exampleUse: '바이브코딩 실습에서 앱 아이디어를 바로 구현 가능한 PRD로 바꿀 때 사용합니다.',
-    relatedTool: 'Gemini',
-    whereToUse: 'Gemini에 붙여 넣어 Canva 앱 아이디어를 구조화된 문서로 바꿀 때 사용합니다.',
-    expectedOutput: 'Canva 앱 실습에 맞는 간결한 Markdown PRD 초안을 받습니다.',
+    exampleUse: 'Grok에서 바로 영상 생성을 시도하기 전에 장면 흐름을 정리할 때 사용합니다.',
+    relatedTool: 'Grok',
+    whereToUse: 'Grok 영상 생성 프롬프트 입력창에 붙여 넣습니다.',
+    expectedOutput: '짧은 영상에 맞는 장면 구성과 카메라 설명이 포함된 프롬프트를 받습니다.',
     difficulty: '응용',
+    useCase: '짧은 영상 생성',
+    outputFormat: '장면 목록 + 촬영 느낌',
   },
   {
-    title: '가정통신문 다듬기 프롬프트',
-    slug: 'communication-polisher',
-    category: '문서 작성',
-    tags: ['가정통신문', '문장다듬기', '학부모소통'],
-    body: `다음 안내문을 {{tone}} 톤으로 다듬어 줘.
-대상은 {{grade}} 학부모이며 주제는 "{{topic}}"이야.
+    title: 'AI 글쓰기 초안 만들기',
+    slug: 'ai-writing-draft',
+    category: 'AI 글쓰기',
+    tags: ['글쓰기', '초안', '문장'],
+    body: `너는 초등학교 교사 글쓰기 도우미야.
+주제는 "{{topic}}"이고 독자는 "{{audience}}"이야.
+
+다음 형식으로 글 초안을 써 줘.
+1. 제목
+2. 핵심 내용 3문단
+3. 마지막 정리 문장
 
 조건:
-- 핵심 정보가 먼저 보이게 재구성
-- 문장 길이는 짧게
-- 필요한 준비물, 일정, 주의사항을 소제목으로 정리
-- 마지막에 문자 메시지용 2문장 요약도 추가`,
+- 문장은 짧게
+- 바로 읽히는 표현 사용
+- 너무 딱딱하지 않게 "{{tone}}" 톤 유지`,
     variables: [
-      { key: 'grade', label: '대상 학년', placeholder: '예: 2학년', defaultValue: '2학년' },
-      { key: 'topic', label: '안내 주제', placeholder: '예: 현장체험학습', defaultValue: '현장체험학습' },
-      { key: 'tone', label: '문체', placeholder: '예: 친절하고 신뢰감 있게', defaultValue: '친절하고 신뢰감 있게' },
+      { key: 'topic', label: '글 주제', placeholder: '예: 학급 프로젝트 안내', defaultValue: '학급 프로젝트 안내' },
+      { key: 'audience', label: '독자', placeholder: '예: 학부모', defaultValue: '학부모' },
+      { key: 'tone', label: '문체', placeholder: '예: 친절하고 분명하게', defaultValue: '친절하고 분명하게' },
     ],
-    exampleUse: '행사 안내문, 가정통신문, 학부모 공지를 빠르게 정리할 때 씁니다.',
+    exampleUse: '가정통신문, 안내문, 설명글 초안을 빠르게 만들 때 씁니다.',
     relatedTool: 'Gemini',
-    whereToUse: 'Gemini에 붙여 넣고 기존 안내문 초안을 더 읽기 쉬운 문장으로 다듬을 때 사용합니다.',
-    expectedOutput: '핵심이 먼저 보이는 안내문과 문자 메시지용 짧은 요약을 받습니다.',
+    whereToUse: 'Gemini 글쓰기 입력창에 붙여 넣습니다.',
+    expectedOutput: '바로 수정 가능한 짧은 초안과 제목을 받습니다.',
     difficulty: '입문',
+    useCase: '공지와 안내문 초안',
+    outputFormat: '제목 + 3문단',
+  },
+  {
+    title: '가정통신문과 공지 문장 다듬기',
+    slug: 'communication-polisher',
+    category: '문장 다듬기',
+    tags: ['안내문', '가정통신문', '다듬기'],
+    body: `다음 안내문을 더 읽기 쉽게 다듬어 줘.
+주제: "{{topic}}"
+대상: {{grade}} 학부모
+
+조건:
+- 핵심 정보가 먼저 보이게
+- 문장을 짧게
+- 준비물, 일정, 주의사항을 소제목으로 정리
+- 마지막에 문자 메시지용 2문장 요약 추가
+- 톤은 "{{tone}}"으로 유지`,
+    variables: [
+      { key: 'topic', label: '안내 주제', placeholder: '예: 현장체험학습', defaultValue: '현장체험학습' },
+      { key: 'grade', label: '학년', placeholder: '예: 4학년', defaultValue: '4학년' },
+      { key: 'tone', label: '문체', placeholder: '예: 친절하고 분명하게', defaultValue: '친절하고 분명하게' },
+    ],
+    exampleUse: '기존 공지문을 더 짧고 읽기 쉽게 다듬고 싶을 때 씁니다.',
+    relatedTool: 'Gemini',
+    whereToUse: 'Gemini 입력창에 붙여 넣고 기존 안내문과 함께 사용합니다.',
+    expectedOutput: '소제목이 살아 있는 읽기 쉬운 공지문과 문자 요약을 받습니다.',
+    difficulty: '기초',
+    useCase: '안내문 다듬기',
+    outputFormat: '소제목 구조 + 문자 요약',
   },
 ]
 
 export const examples: ExampleItem[] = [
   {
-    title: '프로젝터용 수업 도입 슬라이드',
-    slug: 'projector-lesson-slide',
-    tool: 'Canva',
+    title: 'Gemini 수업용 이미지 예시',
+    slug: 'gemini-class-image',
+    tool: 'Gemini',
     image: '/examples/projector-lesson-slide.svg',
-    description: '큰 제목과 시각 자료 중심으로 만든 도입 슬라이드 예시입니다.',
-    relatedPrompt: 'image-brief-for-class',
-    useCase: '도입 자료',
+    description: '주제, 구도, 분위기를 분명히 적었을 때 나오는 수업용 이미지 결과 예시입니다.',
+    relatedPrompt: 'gemini-image-prompt',
+    useCase: '이미지 결과',
   },
   {
-    title: 'AI 기반 차시안 초안',
-    slug: 'lesson-plan-draft',
+    title: 'Grok 영상 장면 설계 예시',
+    slug: 'grok-video-storyboard',
+    tool: 'Grok',
+    image: '/examples/canva-prd-card.svg',
+    description: '영상 생성 전에 장면 흐름을 먼저 정리한 스토리보드형 예시입니다.',
+    relatedPrompt: 'grok-video-scene-builder',
+    useCase: '영상 기획',
+  },
+  {
+    title: 'AI 글쓰기 초안 예시',
+    slug: 'ai-writing-sample',
     tool: 'Gemini',
     image: '/examples/lesson-plan-draft.svg',
-    description: '도입-전개-정리와 형성평가가 한 번에 정리된 차시안 예시입니다.',
-    relatedPrompt: 'lesson-design-accelerator',
-    useCase: '차시 설계',
-  },
-  {
-    title: 'NotebookLM 학습지 요약본',
-    slug: 'notebooklm-guide-sheet',
-    tool: 'NotebookLM',
-    image: '/examples/notebooklm-guide-sheet.svg',
-    description: '긴 읽기 자료를 학생용 질문지와 교사용 포인트로 나눈 예시입니다.',
-    relatedPrompt: 'notebooklm-study-guide',
-    useCase: '학습지',
-  },
-  {
-    title: 'Canva 앱 PRD 카드',
-    slug: 'canva-prd-card',
-    tool: 'Gemini',
-    image: '/examples/canva-prd-card.svg',
-    description: '앱 아이디어를 구조화된 PRD로 정리한 예시 카드입니다.',
-    relatedPrompt: 'canva-app-prd-maker',
-    useCase: '기획 문서',
+    description: '짧은 제목과 3문단 구조로 정리한 공지문 초안 예시입니다.',
+    relatedPrompt: 'ai-writing-draft',
+    useCase: '글쓰기 결과',
   },
 ]
 
 export const resources: ResourceItem[] = [
   {
-    title: '쌤동네 바이브코딩 Padlet 아카이브',
+    title: '의랑초등학교 생성형 AI 연수 교안',
     type: 'PDF',
-    url: '/downloads/padlet-vibe-coding-20260128.pdf',
+    url: '/downloads/uirang-ai-training-20260318.pdf',
     downloadable: true,
-    category: '배포자료',
+    category: '오늘자료',
   },
   {
-    title: '이음학교 이미지 생성 Padlet 아카이브',
+    title: '이미지 생성 Padlet 아카이브',
     type: 'PDF',
     url: '/downloads/padlet-image-generation-20260207.pdf',
     downloadable: true,
-    category: '배포자료',
+    category: '참고자료',
   },
   {
     title: 'Gemini 공식 사이트',
@@ -275,23 +251,9 @@ export const resources: ResourceItem[] = [
     category: '공식도구',
   },
   {
-    title: 'Google AI Studio',
+    title: 'Grok',
     type: '링크',
-    url: 'https://aistudio.google.com',
-    downloadable: false,
-    category: '공식도구',
-  },
-  {
-    title: 'NotebookLM',
-    type: '링크',
-    url: 'https://notebooklm.google.com',
-    downloadable: false,
-    category: '공식도구',
-  },
-  {
-    title: 'Canva',
-    type: '링크',
-    url: 'https://www.canva.com',
+    url: 'https://grok.com',
     downloadable: false,
     category: '공식도구',
   },
@@ -303,233 +265,175 @@ export const resources: ResourceItem[] = [
     category: '공유공간',
   },
   {
-    title: '연수 진행 가이드',
+    title: '문제 해결 안내',
     type: '문서',
     url: '/guide',
     downloadable: false,
-    category: '실습지원',
+    category: '도움말',
   },
 ]
 
 export const courseModules: ModuleItem[] = [
   {
-    title: '도구 준비와 연수 흐름 잡기',
+    title: '도구 열기와 연수 흐름 잡기',
     slug: 'orientation-and-tool-setup',
-    summary: '오늘 사용할 도구와 연수 흐름을 빠르게 익히고 로그인과 링크 점검을 끝내는 모듈입니다.',
-    tool: 'Gemini / AI Studio / NotebookLM',
+    summary: '오늘 쓸 도구를 열고, 연수 흐름과 사이트 역할을 가장 먼저 이해하는 시작 모듈입니다.',
+    tool: 'Gemini / Grok / Padlet',
     order: 1,
     difficulty: '입문',
-    estimatedTime: '20분',
-    goal: '도구 접속과 연수 동선을 10분 안에 안정화한다.',
+    estimatedTime: '15분',
+    goal: '로그인과 도구 준비를 빠르게 끝내고 실습 흐름을 잡는다.',
     externalLinks: [
-      { label: 'Gemini', url: 'https://gemini.google.com', description: '텍스트 생성과 질문 실습' },
-      { label: 'AI Studio', url: 'https://aistudio.google.com', description: '구조화 프롬프트 실험' },
-      { label: 'NotebookLM', url: 'https://notebooklm.google.com', description: '자료 기반 요약과 질의응답' },
+      { label: 'Gemini', url: 'https://gemini.google.com', description: '이미지와 글쓰기 실습에 사용' },
+      { label: 'Grok', url: 'https://grok.com', description: '영상 생성 실습에 사용' },
+      { label: 'Padlet', url: 'https://padlet.com', description: '결과 공유용 외부 링크' },
     ],
-    prompts: ['prompt-refiner', 'communication-polisher'],
-    examples: ['lesson-plan-draft'],
-    resources: ['Gemini 공식 사이트', 'Google AI Studio', 'NotebookLM', '연수 진행 가이드'],
-    padletCtaText: '오늘 연수 체크인 결과를 Padlet에 남기기',
-    preparations: [
-      '구글 계정 로그인 상태 확인',
-      '브라우저 팝업 차단 해제',
-      '오늘 사용할 Padlet 링크 새 탭으로 준비',
-    ],
+    prompts: ['prompt-refiner-basic'],
+    examples: ['ai-writing-sample'],
+    resources: ['의랑초등학교 생성형 AI 연수 교안', 'Gemini 공식 사이트', 'Grok', 'Padlet', '문제 해결 안내'],
+    padletCtaText: '출석과 체크인을 Padlet에 남기기',
+    preparations: ['Gemini와 Grok 로그인 상태 확인', '브라우저 새 탭 준비', 'Padlet 링크 열어 두기'],
     steps: [
-      {
-        title: '연수의 역할 분리 이해하기',
-        description: '이 사이트는 설명과 복사 전용, Padlet은 공유 전용이라는 구조를 먼저 안내합니다.',
-        tip: '처음 3분에 이 원칙을 말해 주면 이후 질문이 크게 줄어듭니다.',
-      },
-      {
-        title: '도구 접속 상태 확인하기',
-        description: 'Gemini, AI Studio, NotebookLM 탭을 순서대로 열고 로그인 여부를 확인합니다.',
-      },
-      {
-        title: '계정 이슈 대처 가이드 보여주기',
-        description: '로그인이 막히는 경우에는 `guide` 페이지의 빠른 해결 항목을 보며 대응합니다.',
-      },
-      {
-        title: '오늘 모듈 동선 공유하기',
-        description: '오늘 페이지에서 어떤 모듈을 어떤 순서로 볼지 화면으로 먼저 보여 줍니다.',
-      },
+      { title: '사이트와 Padlet 역할 나누기', description: '이 사이트는 설명과 복사 전용, Padlet은 공유 전용이라고 먼저 안내합니다.' },
+      { title: 'Gemini 열기', description: 'Gemini 탭을 열고 이미지 생성과 글쓰기 입력이 가능한 상태인지 확인합니다.' },
+      { title: 'Grok 열기', description: 'Grok 탭을 열고 영상 생성 화면까지 들어갈 수 있는지 확인합니다.' },
+      { title: '오늘 순서 보여 주기', description: '오늘 연수 페이지에서 실습 순서를 먼저 보여 주고 첫 모듈로 이동합니다.' },
     ],
     blockers: [
-      {
-        question: '학교 네트워크에서 도구가 열리지 않으면 어떻게 하나요?',
-        answer: '모바일 핫스팟을 예비안으로 두고, 텍스트 중심 실습부터 진행하면 흐름을 유지하기 쉽습니다.',
-      },
-      {
-        question: '수강생이 사이트 안에서 결과 공유를 찾습니다.',
-        answer: '이 사이트는 업로드 기능이 없고 모든 결과 공유는 Padlet에서 진행한다고 다시 안내합니다.',
-      },
+      { question: '도구가 안 열립니다.', answer: '로그인 상태를 먼저 보고, 학교망이 막히면 모바일 데이터나 대체 기기를 준비합니다.' },
+      { question: '공유 위치를 헷갈립니다.', answer: '결과물 공유는 이 사이트가 아니라 Padlet에서만 한다고 다시 안내합니다.' },
     ],
-    expectedOutcome: '오늘 사용할 도구가 모두 열리고, 수강생이 사이트와 Padlet의 역할 차이를 이해합니다.',
-    quickWin: '첫 10분 안에 로그인과 링크 점검을 끝내면 이후 실습이 훨씬 안정적으로 진행됩니다.',
-    commonMistake: '사이트 안에서 업로드나 공유를 찾다가 흐름이 끊기는 경우가 많습니다.',
-    fallbackAction: '도구 접속이 불안정하면 텍스트 프롬프트 실습부터 먼저 진행하고 공유는 나중에 정리합니다.',
+    expectedOutcome: '모든 수강생이 Gemini와 Grok을 열고 오늘 흐름을 이해합니다.',
+    quickWin: '첫 10분 안에 탭과 계정을 안정화하면 이후 질문이 크게 줄어듭니다.',
+    commonMistake: '이 사이트 안에서 업로드나 제출을 찾다가 시간이 지체됩니다.',
+    fallbackAction: 'Grok이 막히면 Gemini 프롬프트와 글쓰기 실습부터 먼저 진행합니다.',
+    primaryToolUrl: 'https://gemini.google.com',
   },
   {
-    title: '프롬프트 설계 스튜디오',
-    slug: 'prompt-design-studio',
-    summary: '막연한 질문을 역할, 목표, 출력 형식이 갖춰진 프롬프트로 업그레이드하는 실습입니다.',
-    tool: 'Gemini / AI Studio',
+    title: '프롬프트 바꾸기 기초',
+    slug: 'prompt-basics',
+    summary: '막연한 요청을 역할, 목표, 출력 형식이 있는 프롬프트로 바꾸는 연습을 합니다.',
+    tool: 'Gemini',
     order: 2,
-    difficulty: '기초',
-    estimatedTime: '30분',
-    goal: '초보 교사도 복사해 바로 쓸 수 있는 프롬프트 구조를 익힌다.',
-    externalLinks: [
-      { label: 'Gemini', url: 'https://gemini.google.com', description: '첫 실습용 권장 도구' },
-      { label: 'AI Studio', url: 'https://aistudio.google.com', description: '프롬프트 구조 비교 실험용' },
-    ],
-    prompts: ['lesson-design-accelerator', 'prompt-refiner', 'canva-app-prd-maker'],
-    examples: ['lesson-plan-draft', 'canva-prd-card'],
-    resources: ['쌤동네 바이브코딩 Padlet 아카이브', 'Google AI Studio'],
-    padletCtaText: '내가 다듬은 프롬프트를 Padlet에 공유하기',
-    preparations: [
-      '질문 한 줄짜리 초안 하나 준비',
-      '프롬프트 비교를 위해 두 개 이상의 답변 결과를 저장할 화면 준비',
-    ],
+    difficulty: '입문',
+    estimatedTime: '20분',
+    goal: '복사해 바로 쓸 수 있는 기본 프롬프트 구조를 익힌다.',
+    externalLinks: [{ label: 'Gemini', url: 'https://gemini.google.com', description: '프롬프트 개선 실습용 기본 도구' }],
+    prompts: ['prompt-refiner-basic'],
+    examples: ['ai-writing-sample'],
+    resources: ['Gemini 공식 사이트', '문제 해결 안내'],
+    padletCtaText: '내가 바꾼 프롬프트를 Padlet에 올리기',
+    preparations: ['막연한 요청 한 문장 준비', 'Gemini 입력창 열기'],
     steps: [
-      {
-        title: '막연한 질문 하나 고르기',
-        description: '예: “좋은 수업 아이디어 줘”처럼 넓은 질문을 하나 선택합니다.',
-      },
-      {
-        title: '역할과 목표 넣기',
-        description: 'AI에게 교사 연수 코치, 수업 설계 조력자 같은 역할을 주고 목표를 분명히 씁니다.',
-      },
-      {
-        title: '출력 형식과 제약 조건 넣기',
-        description: '표, 항목 수, 어투, 학생 수준, 시간 제한 같은 제약을 추가합니다.',
-        tip: '형식까지 적어야 결과 품질 차이가 눈에 띄게 납니다.',
-      },
-      {
-        title: '개선 전후 결과 비교하기',
-        description: '원래 질문과 업그레이드한 프롬프트의 답변을 나란히 비교합니다.',
-      },
+      { title: '원래 요청 적기', description: '“수업 아이디어 줘”처럼 넓은 질문을 하나 씁니다.' },
+      { title: '프롬프트 업그레이드 돌리기', description: '기본 프롬프트 개선 카드를 Gemini에 붙여 넣습니다.' },
+      { title: '좋아진 점 비교하기', description: '역할, 목표, 출력 형식이 들어간 결과를 원래 요청과 비교합니다.' },
+      { title: '내 주제에 맞게 한 번 더 수정하기', description: '학년, 과목, 주제를 넣어 더 현장형으로 바꿉니다.' },
     ],
     blockers: [
-      {
-        question: '답변이 너무 길거나 산만합니다.',
-        answer: '항목 수 제한, 출력 형식, “교사가 바로 사용할 수 있게” 같은 조건을 더해 결과 범위를 좁혀 주세요.',
-      },
-      {
-        question: '수업 상황에 맞지 않는 답이 나옵니다.',
-        answer: '학년, 과목, 주제, 수업 시간, 학생 수준을 명시하면 현장 적합성이 크게 올라갑니다.',
-      },
+      { question: '답이 너무 깁니다.', answer: '항목 수를 3개로 줄여 달라고 다시 요청하세요.' },
+      { question: '너무 일반적입니다.', answer: '학년, 과목, 상황을 한 줄 더 넣으면 훨씬 구체적으로 바뀝니다.' },
     ],
-    expectedOutcome: '막연한 질문이 바로 복사해 쓸 수 있는 구조화 프롬프트로 바뀝니다.',
-    quickWin: '역할, 목표, 출력 형식 세 가지만 넣어도 결과 품질 차이가 바로 보입니다.',
-    commonMistake: '질문은 고쳤지만 출력 형식 조건을 빼서 결과가 다시 길어지는 경우가 많습니다.',
-    fallbackAction: '막히면 `프롬프트 업그레이드 코치`를 먼저 돌려 기본 틀을 만든 뒤 수정합니다.',
+    expectedOutcome: '막연한 질문이 구조화된 실습용 프롬프트로 바뀝니다.',
+    quickWin: '역할과 출력 형식만 넣어도 결과가 바로 달라집니다.',
+    commonMistake: '질문만 바꾸고 출력 형식 조건은 빼먹는 경우가 많습니다.',
+    fallbackAction: '예시 프롬프트를 그대로 복사한 뒤 주제만 바꾸어 먼저 사용합니다.',
+    primaryToolUrl: 'https://gemini.google.com',
   },
   {
-    title: '이미지와 슬라이드 제작 실습',
-    slug: 'image-and-slide-lab',
-    summary: '텍스트 프롬프트를 시각 자료로 바꿔 프로젝터 친화형 슬라이드와 활동 자료를 만드는 모듈입니다.',
-    tool: 'Canva / Gemini',
+    title: 'Gemini 이미지 생성 실습',
+    slug: 'gemini-image-lab',
+    summary: '수업용 이미지와 안내 자료용 장면을 Gemini로 만들어 보는 실습입니다.',
+    tool: 'Gemini',
     order: 3,
     difficulty: '기초',
     estimatedTime: '25분',
-    goal: '교실에서 바로 쓸 수 있는 시각 자료 한 장을 완성한다.',
-    externalLinks: [
-      { label: 'Canva', url: 'https://www.canva.com', description: '시각화와 슬라이드 제작' },
-      { label: 'Gemini', url: 'https://gemini.google.com', description: '이미지 설명용 브리프 생성' },
-    ],
-    prompts: ['image-brief-for-class', 'communication-polisher'],
-    examples: ['projector-lesson-slide'],
-    resources: ['이음학교 이미지 생성 Padlet 아카이브', 'Canva'],
-    padletCtaText: '완성한 시각 자료를 Padlet에 올리기',
-    preparations: [
-      'Canva 또는 이미지 생성 도구 접속',
-      '오늘 수업 주제 또는 학교 행사 주제 하나 정하기',
-    ],
+    goal: '교실에서 바로 보여 줄 수 있는 이미지 한 장을 만든다.',
+    externalLinks: [{ label: 'Gemini', url: 'https://gemini.google.com', description: '이미지 생성 실습' }],
+    prompts: ['gemini-image-prompt'],
+    examples: ['gemini-class-image'],
+    resources: ['의랑초등학교 생성형 AI 연수 교안', '이미지 생성 Padlet 아카이브', 'Gemini 공식 사이트'],
+    padletCtaText: '완성한 이미지를 Padlet에 공유하기',
+    preparations: ['주제 하나 정하기', 'Gemini 이미지 생성 화면 열기'],
     steps: [
-      {
-        title: '시각화할 주제 정하기',
-        description: '학습 주제, 행사 안내, 학급 규칙 가운데 하나를 선택합니다.',
-      },
-      {
-        title: '이미지 생성 브리프 만들기',
-        description: '과목, 학년, 분위기, 피해야 할 요소를 포함한 프롬프트를 생성합니다.',
-      },
-      {
-        title: 'Canva에서 카드형 결과물 만들기',
-        description: '큰 제목, 핵심 문장, 한 장 이미지 중심으로 프로젝터 친화형 화면을 구성합니다.',
-      },
-      {
-        title: '교실 활용 장면 연결하기',
-        description: '도입, 설명, 정리 중 어디에 쓰일지 한 문장으로 정리합니다.',
-      },
+      { title: '주제 정하기', description: '수업 장면, 학교 행사, 교실 규칙 중 하나를 정합니다.' },
+      { title: '이미지 프롬프트 만들기', description: '장면, 구도, 분위기, 피해야 할 요소가 들어간 프롬프트를 만듭니다.' },
+      { title: 'Gemini에 붙여 넣기', description: '이미지 생성용 프롬프트를 입력하고 결과를 확인합니다.' },
+      { title: '교실용으로 다시 다듬기', description: '텍스트가 많으면 제거하고, 장면을 더 단순하게 다시 요청합니다.' },
     ],
     blockers: [
-      {
-        question: '이미지가 너무 화려해서 수업용으로 부담스럽습니다.',
-        answer: '브리프에 “텍스트 가독성 우선, 단순한 구도, 배경 여백 확보”를 추가하세요.',
-      },
-      {
-        question: '슬라이드에 정보가 너무 많아집니다.',
-        answer: '한 화면에는 메시지 하나만 남기고 긴 설명은 말로 보완하는 방식이 프로젝터에서 더 잘 보입니다.',
-      },
+      { question: '결과가 너무 복잡합니다.', answer: '인물 수를 줄이고 장면을 한 가지로 좁혀 달라고 요청하세요.' },
+      { question: '텍스트가 섞여 나옵니다.', answer: '이미지 안에 글자를 넣지 말라고 분명히 적으세요.' },
     ],
-    expectedOutcome: '프로젝터에서 바로 보여 줄 수 있는 시각 자료나 도입 슬라이드 한 장을 완성합니다.',
-    quickWin: '한 화면에는 메시지 하나만 남기면 결과물이 금방 정돈됩니다.',
-    commonMistake: '텍스트를 너무 많이 넣어 슬라이드가 다시 문서처럼 보이는 경우가 많습니다.',
-    fallbackAction: '이미지가 마음에 들지 않으면 텍스트 카드형 슬라이드로 먼저 완성한 뒤 이미지를 나중에 교체합니다.',
+    expectedOutcome: '프로젝터에서 보여 줄 수 있는 수업용 이미지 한 장을 완성합니다.',
+    quickWin: '장면 하나, 느낌 하나만 남기면 결과가 빠르게 정돈됩니다.',
+    commonMistake: '설명하고 싶은 내용을 한 번에 너무 많이 넣습니다.',
+    fallbackAction: '이미지가 마음에 들지 않으면 장면 설명만 더 짧게 줄여 다시 생성합니다.',
+    primaryToolUrl: 'https://gemini.google.com',
   },
   {
-    title: '자료 요약과 학습지 재구성',
-    slug: 'notebooklm-classroom-kit',
-    summary: '긴 자료를 NotebookLM으로 요약하고 학생용 질문과 교사용 포인트로 재구성합니다.',
-    tool: 'NotebookLM',
+    title: 'Grok 영상 생성 실습',
+    slug: 'grok-video-lab',
+    summary: '짧은 영상 생성을 위해 장면 흐름을 먼저 설계하고 Grok으로 결과를 만들어 보는 모듈입니다.',
+    tool: 'Grok',
     order: 4,
-    difficulty: '중급',
-    estimatedTime: '20분',
-    goal: '긴 읽기 자료를 짧은 학습지 포맷으로 전환하는 흐름을 익힌다.',
-    externalLinks: [
-      { label: 'NotebookLM', url: 'https://notebooklm.google.com', description: '자료 기반 요약과 질의응답' },
-    ],
-    prompts: ['notebooklm-study-guide', 'lesson-design-accelerator'],
-    examples: ['notebooklm-guide-sheet'],
-    resources: ['NotebookLM', '연수 진행 가이드'],
-    padletCtaText: '재구성한 학습지를 Padlet에 공유하기',
-    preparations: [
-      '읽기 자료 또는 안내문 1개 준비',
-      '학생용과 교사용 산출물을 나눠 볼 기준 정하기',
-    ],
+    difficulty: '응용',
+    estimatedTime: '25분',
+    goal: '8초 안팎의 짧은 영상 프롬프트 흐름을 익힌다.',
+    externalLinks: [{ label: 'Grok', url: 'https://grok.com', description: '영상 생성 실습' }],
+    prompts: ['grok-video-scene-builder'],
+    examples: ['grok-video-storyboard'],
+    resources: ['의랑초등학교 생성형 AI 연수 교안', 'Grok'],
+    padletCtaText: '영상 결과나 장면 설계를 Padlet에 남기기',
+    preparations: ['Grok 영상 생성 화면 열기', '짧은 영상 주제 하나 정하기'],
     steps: [
-      {
-        title: '자료 업로드 또는 핵심 내용 붙여 넣기',
-        description: '수업 자료나 안내문을 NotebookLM에 넣고 요약 대상 범위를 정합니다.',
-      },
-      {
-        title: '학생용 언어로 다시 쓰기',
-        description: '어려운 표현을 쉬운 말 중심으로 바꾸고 핵심 개념 수를 제한합니다.',
-      },
-      {
-        title: '질문과 확장 활동 만들기',
-        description: '확인 질문과 교사용 추가 질문을 분리해서 정리합니다.',
-      },
-      {
-        title: '학습지 형태로 정리하기',
-        description: '바로 배포 가능한 문단 구조와 제목 체계로 출력합니다.',
-      },
+      { title: '주제 한 줄 정하기', description: '영상으로 보여 주고 싶은 장면을 한 줄로 적습니다.' },
+      { title: '장면 흐름 만들기', description: '시작, 중간, 마지막 장면이 있는 프롬프트를 만듭니다.' },
+      { title: 'Grok에 넣고 생성 시작하기', description: '프롬프트를 붙여 넣고 먼저 생성 버튼을 눌러 둡니다.' },
+      { title: '기다리는 동안 글쓰기 모듈 보기', description: '영상 대기 시간에는 다음 글쓰기 실습을 먼저 진행합니다.' },
+      { title: '결과 다시 확인하고 수정하기', description: '장면이 복잡하면 카메라 느낌과 인물 수를 더 단순하게 조정합니다.' },
     ],
     blockers: [
-      {
-        question: '요약이 너무 일반적입니다.',
-        answer: '“학생용”, “4개 핵심 개념만”, “질문 포함”처럼 출력 형식을 더 구체적으로 지정해 주세요.',
-      },
-      {
-        question: '학생 수준에 맞지 않는 표현이 섞입니다.',
-        answer: '대상 학년과 쉬운 말 사용 조건을 프롬프트에 반드시 넣어 주세요.',
-      },
+      { question: '생성이 오래 걸립니다.', answer: '영상은 먼저 생성 시작만 하고, 대기 시간에는 다른 실습을 병행하세요.' },
+      { question: '장면이 너무 산만합니다.', answer: '시작-중간-끝 중 한 장면을 줄이고 움직임을 한 가지로 좁히세요.' },
     ],
-    expectedOutcome: '긴 자료가 학생용 학습지와 교사용 포인트로 나뉜 간단한 수업 자료로 바뀝니다.',
-    quickWin: '핵심 개념 수를 먼저 제한하면 결과가 훨씬 읽기 쉬워집니다.',
-    commonMistake: '학생용 자료인데도 교사용 설명 수준의 단어가 그대로 남는 경우가 많습니다.',
-    fallbackAction: '자료 업로드가 어렵다면 핵심 문단만 붙여 넣고 질문 생성부터 먼저 진행합니다.',
+    expectedOutcome: '짧은 영상에 맞는 장면 설계와 수정 흐름을 익힙니다.',
+    quickWin: '영상을 바로 길게 설명하지 말고 3장면 구조로 나누면 훨씬 쉬워집니다.',
+    commonMistake: '너무 긴 이야기와 너무 많은 장면을 한 번에 넣습니다.',
+    fallbackAction: '영상 생성이 어렵다면 장면 설계 프롬프트만 완성해도 오늘 목표는 충분합니다.',
+    primaryToolUrl: 'https://grok.com',
+    waitNote: '영상 생성은 대기 시간이 있어 시작 후 다른 실습을 먼저 진행해도 됩니다.',
+  },
+  {
+    title: 'AI 글쓰기와 문장 다듬기',
+    slug: 'ai-writing-lab',
+    summary: '공지문, 안내문, 가정통신문 같은 글을 더 빨리 쓰고 읽기 쉽게 다듬는 실습입니다.',
+    tool: 'Gemini',
+    order: 5,
+    difficulty: '입문',
+    estimatedTime: '20분',
+    goal: '바로 수정 가능한 글 초안과 다듬기 흐름을 익힌다.',
+    externalLinks: [{ label: 'Gemini', url: 'https://gemini.google.com', description: '글쓰기와 문장 다듬기 실습' }],
+    prompts: ['ai-writing-draft', 'communication-polisher'],
+    examples: ['ai-writing-sample'],
+    resources: ['의랑초등학교 생성형 AI 연수 교안', 'Gemini 공식 사이트', '문제 해결 안내'],
+    padletCtaText: '내가 고친 글 초안을 Padlet에 공유하기',
+    preparations: ['공지 주제 하나 정하기', '기존 안내문이 있으면 같이 준비하기'],
+    steps: [
+      { title: '초안 먼저 만들기', description: '주제와 독자를 넣고 짧은 초안을 먼저 받습니다.' },
+      { title: '읽기 쉽게 다듬기', description: '소제목, 일정, 준비물, 주의사항이 보이도록 다시 요청합니다.' },
+      { title: '문자 메시지 요약 만들기', description: '마지막에 2문장 요약을 추가해 실전 활용도를 높입니다.' },
+      { title: '내 문체로 한 번 더 수정하기', description: '너무 딱딱하면 톤을 부드럽게, 너무 길면 더 짧게 바꿉니다.' },
+    ],
+    blockers: [
+      { question: '문장이 너무 딱딱합니다.', answer: '친절하고 분명하게, 쉬운 말 중심으로 써 달라고 다시 요청하세요.' },
+      { question: '핵심이 뒤에 갑니다.', answer: '가장 중요한 일정과 준비물을 먼저 보여 달라고 적으세요.' },
+    ],
+    expectedOutcome: '짧고 읽기 쉬운 공지문이나 안내문 초안을 완성합니다.',
+    quickWin: '제목과 첫 문장만 좋아져도 전체 글이 훨씬 읽기 쉬워집니다.',
+    commonMistake: '설명은 길게 적고 독자 정보는 빼먹습니다.',
+    fallbackAction: '기존 글이 있으면 새로 쓰기보다 다듬기 프롬프트부터 먼저 사용합니다.',
+    primaryToolUrl: 'https://gemini.google.com',
   },
 ].sort((left, right) => left.order - right.order)
 

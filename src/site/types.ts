@@ -23,6 +23,8 @@ export interface PromptItem {
   whereToUse?: string
   expectedOutput?: string
   difficulty?: '입문' | '기초' | '응용'
+  useCase?: string
+  outputFormat?: string
 }
 
 export interface ExampleItem {
@@ -75,6 +77,8 @@ export interface ModuleItem {
   quickWin?: string
   commonMistake?: string
   fallbackAction?: string
+  primaryToolUrl?: string
+  waitNote?: string
 }
 
 export interface CurrentSession {
@@ -88,4 +92,7 @@ export interface CurrentSession {
   quickStartSteps?: string[]
   mustOpenTools?: string[]
   supportNotes?: string[]
+  agendaTitle?: string
+  primaryAction?: string
+  secondaryAction?: string
 }

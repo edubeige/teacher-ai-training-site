@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { navigationItems, buildAssetHref, buildInternalHref, isCurrentPath, isExternalHref, isInternalRoute } from '../lib/routing'
+import { currentSession } from '../site/content'
 import type { ExampleItem, ModuleItem, PromptItem, ResourceItem } from '../site/types'
 
 export function formatKoreanDate(value: string): string {
@@ -66,7 +67,7 @@ export function AppShell({
           <span className="brand-mark">AI</span>
           <span className="brand-copy">
             <strong>생성형 AI 강의자료 허브</strong>
-            <small>Teacher training dashboard</small>
+            <small>Tomorrow training workflow</small>
           </span>
         </button>
 
@@ -85,11 +86,11 @@ export function AppShell({
 
         <div className="sidebar-support">
           <span className="sidebar-label">빠른 이동</span>
+          <a className="sidebar-ghost" href={currentSession.padletUrl} target="_blank" rel="noreferrer">
+            Padlet 열기
+          </a>
           <button type="button" className="sidebar-ghost" onClick={() => onNavigate('/resources')}>
-            자료실 보기
-          </button>
-          <button type="button" className="sidebar-ghost" onClick={() => onNavigate('/guide')}>
-            막히는 경우 안내
+            외부 도구와 도움말
           </button>
         </div>
       </aside>
@@ -565,7 +566,7 @@ export function PromptCard({
         </div>
       </div>
 
-      {prompt.variables.length > 0 ? (
+      {!compact && prompt.variables.length > 0 ? (
         <div className="variable-grid">
           {prompt.variables.map((variable) => (
             <label key={variable.key}>
@@ -594,11 +595,54 @@ export function PromptCard({
         ))}
       </div>
 
-      <pre>{renderedPrompt}</pre>
+      <pre>{compact ? `${renderedPrompt.slice(0, 220)}${renderedPrompt.length > 220 ? '...' : ''}` : renderedPrompt}</pre>
       <div className="prompt-actions">
         <CopyButton text={renderedPrompt} />
         <button type="button" className="button outline" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
           상세 보기
+        </button>
+      </div>
+    </article>
+  )
+}
+
+export function PromptListCard({
+  prompt,
+  onNavigate,
+}: {
+  prompt: PromptItem
+  onNavigate: (href: string) => void
+}) {
+  return (
+    <article className="prompt-list-card">
+      <div className="meta-row">
+        <span>{prompt.relatedTool}</span>
+        <span>{prompt.difficulty ?? '기초'}</span>
+      </div>
+      <button type="button" className="card-title-button" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
+        {prompt.title}
+      </button>
+      <p>{prompt.useCase ?? prompt.exampleUse}</p>
+      <div className="prompt-rows">
+        <div>
+          <span>어디에 붙여 넣나요</span>
+          <strong>{prompt.whereToUse ?? `${prompt.relatedTool} 입력창에 붙여 넣습니다.`}</strong>
+        </div>
+        <div>
+          <span>예상 결과</span>
+          <strong>{prompt.expectedOutput ?? '바로 수정 가능한 초안을 받습니다.'}</strong>
+        </div>
+      </div>
+      <div className="tag-row">
+        {prompt.tags.map((tag) => (
+          <span key={tag} className="tag">
+            #{tag}
+          </span>
+        ))}
+      </div>
+      <div className="prompt-list-actions">
+        <button type="button" className="button ghost" onClick={() => onNavigate(`/prompts/${prompt.slug}`)}>
+          자세히 보기
         </button>
       </div>
     </article>

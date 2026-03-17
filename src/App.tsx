@@ -76,7 +76,7 @@ function App() {
   } else if (route.kind === 'resources') {
     content = <ResourcesPage onNavigate={handleNavigate} />
   } else if (route.kind === 'guide') {
-    content = <GuidePage />
+    content = <GuidePage onNavigate={handleNavigate} />
   } else if (route.kind === 'module') {
     const module = moduleMap.get(route.slug)
     content = module ? <ModulePage module={module} onNavigate={handleNavigate} /> : <NotFoundPage onNavigate={handleNavigate} />

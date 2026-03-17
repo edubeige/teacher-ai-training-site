@@ -11,13 +11,10 @@ export type RouteMatch =
   | { kind: 'not-found'; pathname: string }
 
 export const navigationItems = [
-  { href: '/', label: '홈' },
   { href: '/today', label: '오늘 연수' },
-  { href: '/course/generative-ai', label: '코스' },
-  { href: '/prompts', label: '프롬프트 허브' },
-  { href: '/examples', label: '예시 갤러리' },
-  { href: '/resources', label: '자료실' },
-  { href: '/guide', label: '가이드' },
+  { href: '/course/generative-ai', label: '실습 모듈' },
+  { href: '/prompts', label: '프롬프트' },
+  { href: '/resources', label: '자료/도움' },
 ] as const
 
 const baseUrl = import.meta.env.BASE_URL
@@ -138,8 +135,12 @@ export function matchRoute(pathname: string): RouteMatch {
 }
 
 export function isCurrentPath(pathname: string, href: string): boolean {
-  if (href === '/') {
-    return pathname === '/'
+  if (href === '/today') {
+    return pathname === '/' || pathname === '/today'
+  }
+
+  if (href === '/resources') {
+    return pathname === '/resources' || pathname === '/guide'
   }
 
   return pathname === href || pathname.startsWith(`${href}/`)
