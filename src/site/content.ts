@@ -35,6 +35,18 @@ export const currentSession: CurrentSession = {
   ],
   padletUrl: 'https://padlet.com',
   featuredModules: ['orientation-and-tool-setup', 'prompt-design-studio', 'image-and-slide-lab'],
+  quickStartSteps: [
+    '구글 계정 로그인 상태를 먼저 확인합니다.',
+    'Gemini, AI Studio, Canva 중 오늘 사용할 도구를 새 탭으로 엽니다.',
+    '첫 프롬프트를 복사해 붙여 넣고 결과를 한 번 확인합니다.',
+    '공유가 필요하면 Padlet 탭을 열어 둡니다.',
+  ],
+  mustOpenTools: ['Gemini', 'Google AI Studio', 'Canva', 'Padlet'],
+  supportNotes: [
+    '로그인이 막히면 가이드 페이지에서 빠른 해결 카드를 먼저 확인하세요.',
+    '복사 버튼이 되지 않으면 프롬프트 본문을 길게 눌러 수동 복사를 시도하세요.',
+    '결과가 길거나 어색하면 학년, 과목, 형식을 더 구체적으로 넣어 주세요.',
+  ],
 }
 
 export const prompts: PromptItem[] = [
@@ -61,6 +73,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: '차시안 초안을 빠르게 만들고 수정 포인트를 잡을 때 사용합니다.',
     relatedTool: 'Gemini',
+    whereToUse: 'Gemini나 AI Studio 입력창에 바로 붙여 넣습니다.',
+    expectedOutput: '수업 목표, 활동안, 질문, 평가, 운영 팁이 한 번에 정리된 초안을 받습니다.',
+    difficulty: '기초',
   },
   {
     title: '프롬프트 업그레이드 코치',
@@ -80,6 +95,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: '막연한 질문을 실습용 프롬프트 카드로 바꾸는 데 적합합니다.',
     relatedTool: 'AI Studio',
+    whereToUse: 'AI Studio에 붙여 넣고 기존 질문을 더 좋은 프롬프트로 다듬을 때 씁니다.',
+    expectedOutput: '역할, 목표, 형식, 제약이 포함된 더 정교한 프롬프트와 개선 이유를 받습니다.',
+    difficulty: '기초',
   },
   {
     title: '이미지 생성 브리프',
@@ -105,6 +123,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: 'Canva 또는 Gemini에 붙여 넣을 시각자료용 브리프를 만들 때 유용합니다.',
     relatedTool: 'Canva',
+    whereToUse: 'Canva 또는 Gemini의 이미지 생성 입력창에 붙여 넣습니다.',
+    expectedOutput: '장면 설명, 구도, 분위기, 금지 요소, 활용 방법이 포함된 시각화 브리프를 받습니다.',
+    difficulty: '입문',
   },
   {
     title: 'NotebookLM 학습지 변환 프롬프트',
@@ -130,6 +151,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: '긴 읽기 자료를 학생 활동지나 교사용 요약본으로 바꿀 때 씁니다.',
     relatedTool: 'NotebookLM',
+    whereToUse: 'NotebookLM 대화창에 자료를 넣은 뒤 후속 프롬프트로 사용합니다.',
+    expectedOutput: '핵심 개념, 쉬운 설명, 확인 질문, 확장 질문까지 포함된 학습지 초안을 받습니다.',
+    difficulty: '기초',
   },
   {
     title: 'Canva 앱 PRD 메이커',
@@ -159,6 +183,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: '바이브코딩 실습에서 앱 아이디어를 바로 구현 가능한 PRD로 바꿀 때 사용합니다.',
     relatedTool: 'Gemini',
+    whereToUse: 'Gemini에 붙여 넣어 Canva 앱 아이디어를 구조화된 문서로 바꿀 때 사용합니다.',
+    expectedOutput: 'Canva 앱 실습에 맞는 간결한 Markdown PRD 초안을 받습니다.',
+    difficulty: '응용',
   },
   {
     title: '가정통신문 다듬기 프롬프트',
@@ -180,6 +207,9 @@ export const prompts: PromptItem[] = [
     ],
     exampleUse: '행사 안내문, 가정통신문, 학부모 공지를 빠르게 정리할 때 씁니다.',
     relatedTool: 'Gemini',
+    whereToUse: 'Gemini에 붙여 넣고 기존 안내문 초안을 더 읽기 쉬운 문장으로 다듬을 때 사용합니다.',
+    expectedOutput: '핵심이 먼저 보이는 안내문과 문자 메시지용 짧은 요약을 받습니다.',
+    difficulty: '입문',
   },
 ]
 
@@ -334,6 +364,10 @@ export const courseModules: ModuleItem[] = [
         answer: '이 사이트는 업로드 기능이 없고 모든 결과 공유는 Padlet에서 진행한다고 다시 안내합니다.',
       },
     ],
+    expectedOutcome: '오늘 사용할 도구가 모두 열리고, 수강생이 사이트와 Padlet의 역할 차이를 이해합니다.',
+    quickWin: '첫 10분 안에 로그인과 링크 점검을 끝내면 이후 실습이 훨씬 안정적으로 진행됩니다.',
+    commonMistake: '사이트 안에서 업로드나 공유를 찾다가 흐름이 끊기는 경우가 많습니다.',
+    fallbackAction: '도구 접속이 불안정하면 텍스트 프롬프트 실습부터 먼저 진행하고 공유는 나중에 정리합니다.',
   },
   {
     title: '프롬프트 설계 스튜디오',
@@ -385,6 +419,10 @@ export const courseModules: ModuleItem[] = [
         answer: '학년, 과목, 주제, 수업 시간, 학생 수준을 명시하면 현장 적합성이 크게 올라갑니다.',
       },
     ],
+    expectedOutcome: '막연한 질문이 바로 복사해 쓸 수 있는 구조화 프롬프트로 바뀝니다.',
+    quickWin: '역할, 목표, 출력 형식 세 가지만 넣어도 결과 품질 차이가 바로 보입니다.',
+    commonMistake: '질문은 고쳤지만 출력 형식 조건을 빼서 결과가 다시 길어지는 경우가 많습니다.',
+    fallbackAction: '막히면 `프롬프트 업그레이드 코치`를 먼저 돌려 기본 틀을 만든 뒤 수정합니다.',
   },
   {
     title: '이미지와 슬라이드 제작 실습',
@@ -435,6 +473,10 @@ export const courseModules: ModuleItem[] = [
         answer: '한 화면에는 메시지 하나만 남기고 긴 설명은 말로 보완하는 방식이 프로젝터에서 더 잘 보입니다.',
       },
     ],
+    expectedOutcome: '프로젝터에서 바로 보여 줄 수 있는 시각 자료나 도입 슬라이드 한 장을 완성합니다.',
+    quickWin: '한 화면에는 메시지 하나만 남기면 결과물이 금방 정돈됩니다.',
+    commonMistake: '텍스트를 너무 많이 넣어 슬라이드가 다시 문서처럼 보이는 경우가 많습니다.',
+    fallbackAction: '이미지가 마음에 들지 않으면 텍스트 카드형 슬라이드로 먼저 완성한 뒤 이미지를 나중에 교체합니다.',
   },
   {
     title: '자료 요약과 학습지 재구성',
@@ -484,6 +526,10 @@ export const courseModules: ModuleItem[] = [
         answer: '대상 학년과 쉬운 말 사용 조건을 프롬프트에 반드시 넣어 주세요.',
       },
     ],
+    expectedOutcome: '긴 자료가 학생용 학습지와 교사용 포인트로 나뉜 간단한 수업 자료로 바뀝니다.',
+    quickWin: '핵심 개념 수를 먼저 제한하면 결과가 훨씬 읽기 쉬워집니다.',
+    commonMistake: '학생용 자료인데도 교사용 설명 수준의 단어가 그대로 남는 경우가 많습니다.',
+    fallbackAction: '자료 업로드가 어렵다면 핵심 문단만 붙여 넣고 질문 생성부터 먼저 진행합니다.',
   },
 ].sort((left, right) => left.order - right.order)
 

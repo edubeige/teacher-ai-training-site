@@ -20,6 +20,9 @@ export interface PromptItem {
   variables: PromptVariable[]
   exampleUse: string
   relatedTool: string
+  whereToUse?: string
+  expectedOutput?: string
+  difficulty?: '입문' | '기초' | '응용'
 }
 
 export interface ExampleItem {
@@ -68,6 +71,10 @@ export interface ModuleItem {
   preparations: string[]
   steps: ModuleStep[]
   blockers: ModuleBlocker[]
+  expectedOutcome?: string
+  quickWin?: string
+  commonMistake?: string
+  fallbackAction?: string
 }
 
 export interface CurrentSession {
@@ -78,4 +85,7 @@ export interface CurrentSession {
   padletUrl: string
   featuredModules: string[]
   instructor: string
+  quickStartSteps?: string[]
+  mustOpenTools?: string[]
+  supportNotes?: string[]
 }
